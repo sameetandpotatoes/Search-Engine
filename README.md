@@ -1,36 +1,20 @@
-# Heroku Django Starter Template
+## Installation
 
-An utterly fantastic project starter template for Django 1.8.
+- `git clone https://github.com/sameetandpotatoes/Search-Engine.git searchengine`
+- `cd searchengine`
 
-## Features
+If you have a Mac, you probably already have pip installed, but just check/upgrade first:
 
-- Production-ready configuration for Static Files, Database Settings, Gunicorn, etc.
-- Enhancements to Django's static file serving functionality via WhiteNoise
-- Enhancements to Django's database functionality via django-postgrespool and dj-database-url
+    pip install -U pip setuptools
 
-## How to Use
+- `pip install -r requirements.txt`
 
-To use this project, follow these steps:
+We are using a `virtualenv` in Python to use self-contained, independent python packages
+so that we don't have any version conflicts. This means that whenever you want to run,
+test, or do anything, you must be in the virtualenv. You can do that with this command:
 
-1. Create your working environment.
-2. Install Django (`$ pip install django`)
-3. Create a new project using this template
+- `source dev/bin/activate` (dev is the name of the virtual environment)
 
-## Creating Your Project
+Now, finally you can run:
 
-Using this template to create a new Django app is easy::
-
-    $ django-admin.py startproject --template=https://github.com/heroku/heroku-django-template/archive/master.zip --name=Procfile helloworld
-
-You can replace ``helloworld`` with your desired project name.
-
-## Deployment to Heroku
-
-    $ git init
-    $ git add -A
-    $ git commit -m "Initial commit"
-
-    $ heroku create
-    $ git push heroku master
-
-    $ heroku run python manage.py migrate
+- `python manage.py runserver`
