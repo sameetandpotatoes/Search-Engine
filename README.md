@@ -7,13 +7,23 @@ If you have a Mac, you probably already have pip installed, but just check/upgra
 
     pip install -U pip setuptools
 
-- `pip install -r requirements.txt`
-
 We are using a `virtualenv` in Python to use self-contained, independent python packages
 so that we don't have any version conflicts. This means that whenever you want to run,
-test, or do anything, you must be in the virtualenv. You can do that with this command:
+test, or do anything, you must be in the virtualenv.
 
-- `source dev/bin/activate` (dev is the name of the virtual environment)
+## `virtualenv` Installation
+
+- `virtualenv dev` (You don't have to call it dev, but I will for the remainder of this; it's just the name of your environment).
+- `source dev/bin/activate`
+
+Now that you are inside the virtual environment, install all of your packages inside of it from the `requirements.txt`:
+
+- `pip install -r requirements.txt`
+
+## Postgres Installation
+
+- [http://www.postgresql.org/download/](http://www.postgresql.org/download/)
+- Install, make sure it's running before you start the application
 
 Now, finally you can run:
 
