@@ -25,6 +25,13 @@ Now that you are inside the virtual environment, install all of your packages in
 - [http://www.postgresql.org/download/](http://www.postgresql.org/download/)
 - Install, make sure it's running before you start the application
 
-Now, finally you can run:
+## Compiling JavaScript
+
+- Have `npm` installed.
+- Run `npm install`
+- Then run `npm start`. Note that this is a perpetual task and if you cancel it, your JS changes will not show when you refresh the browser.
+- Now all JS changes will automatically (in a few seconds) get compiled down to `js` in `static/js`
+
+Now, in a separate window/tab in your Terminal, you can finally run:
 
 - `python manage.py runserver`

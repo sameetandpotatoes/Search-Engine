@@ -3,7 +3,7 @@ var Index = React.createClass({
   render: function() {
   	return (
       <div className="row-fluid">
-        Hello World
+        Hello World From React.JS
       </div>
   	);
   }

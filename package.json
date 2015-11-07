@@ -26,7 +26,7 @@
   },
   "scripts": {
     "index": "watchify -o static/js/index.js -v -d react/index.react.js",
-    "start": "npm run index",
+    "start": "npm run index"
   },
   "browserify": {
     "transform": [
