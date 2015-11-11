@@ -18,29 +18,31 @@ test, or do anything, you must be in the virtualenv.
 
 Now that you are inside the virtual environment, install all of your packages inside of it from the `requirements.txt`:
 
-- `pip install -r requirements.txt`
+    pip install -r requirements.txt
 
 ## Postgres Installation
 
 - [http://www.postgresql.org/download/](http://www.postgresql.org/download/)
-- Install, make sure it's running before you start the application
+- Install, make sure it's running before you start the application (see the elephant in your menu bar at the top)
 
 ## Compiling JavaScript
 
-- Have `npm` installed.
-- Run `npm install`
+- Note you only need to do this if you make UI changes. If you're working purely in Django, then you can probably ignore the `npm start`.
+
+- Have [npm](https://nodejs.org/en/) installed.
+- Run `npm install` in the project root.
 - Then run `npm start`. Note that this is a perpetual task and if you cancel it, your JS changes will not show when you refresh the browser.
 - Now all JS changes will automatically (in a few seconds) get compiled down to `js` in `static/js`
 
 ### Database Setup
 
 - With postgres, run these commands
-    
+
     > psql
     > CREATE DATABASE searchengine
-    
+
 Ctrl + D to exit
-    
+
     > createuser -P -s -e cook
 
 Enter `chef` as the password
@@ -49,7 +51,7 @@ Enter `chef` as the password
 
         DEBUG = True
         TEMPLATE_DEBUG = True
-        
+
         DATABASES = {
             "default": {
                 "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -63,7 +65,7 @@ Enter `chef` as the password
 
 Check that everything works by running:
 
-    python manage.py syncdb && python manage.py makemigrations && python manage.py migrate
+    python manage.py syncdb
 
 If it does, you're set and you can run the local server. If not, reach out to me and I'll see if I can help.
 
@@ -71,9 +73,10 @@ If it does, you're set and you can run the local server. If not, reach out to me
 
 - If you make a change in `engine/models.py`, you need to migrate those changes to the database schema. Do that with:
 
-    python manage.py makemigrations engine
-
+    python manage.py makemigrations && python manage.py migrate
 
 Now, in a separate window/tab in your Terminal, you can finally run:
 
 - `python manage.py runserver`
+
+Open up `http://localhost:8000`!
