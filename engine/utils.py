@@ -12,6 +12,17 @@ def url_in_rules(url):
             return key
     return None
 
+def filter_ingredients(parent_url, soup):
+    good_ingredients = []
+    for ing in soup(attrs={'class':rules.RULES[parent_url]['INGREDIENTS']}):
+        trimmed_ingredient = ing.getText()
+        if not(any(i in trimmed_ingredient for i in rules.BAD_INGREDIENTS)) and trimmed_ingredient:
+            good_ingredients.append(trimmed_ingredient)
+    return good_ingredients
+
+def get_title_from_page(parent_url, soup):
+    return soup(attrs={'class':rules.RULES[parent_url]['TITLE']})[0].getText()
+
 def get_html(base, level):
     if level < 0 or base is None or not(validators.url(base)):
         return
@@ -23,10 +34,9 @@ def get_html(base, level):
     # Do any parsing on current url
     parent_url = url_in_rules(base)
     if parent_url is not None:
-        ingredients = soup(attrs={'class':rules.RULES[parent_url]['INGREDIENTS']})
-        if len(ingredients) is not 0:
-            for ing in ingredients:
-                print(ing)
+        ingredients = filter_ingredients(parent_url, soup)
+        title = get_title_from_page(parent_url, soup)
+        print "{}: {}".format(title, ingredients)
     # Now loop through all linked pages on the page and get their content too
     for link in soup.find_all('a'):
         page_url = link.get('href')
@@ -36,4 +46,4 @@ def get_html(base, level):
             page_url = urljoin(base, page_url)
             get_html(page_url, level - 1)
 
-get_html('http://allrecipes.com/', 2)
+get_html('http://allrecipes.com/recipe/234803/chef-johns-smothered-pork-chops/', 2)
