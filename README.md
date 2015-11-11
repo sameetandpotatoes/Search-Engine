@@ -35,28 +35,31 @@ Now that you are inside the virtual environment, install all of your packages in
 ### Database Setup
 
 - With postgres, run these commands
+    
+    > psql
+    > CREATE DATABASE searchengine
+    
+Ctrl + D to exit
+    
+    > createuser -P -s -e cook
 
-      > psql
-      > CREATE DATABASE searchengine
-      Ctrl + D to exit
-      > createuser -P -s -e cook
-      Enter `chef` as the password
+Enter `chef` as the password
 
 - In the searchengine folder, create a file called `local_settings.py`:
 
-      DEBUG = True
-      TEMPLATE_DEBUG = True
-
-      DATABASES = {
-          "default": {
-              "ENGINE": "django.db.backends.postgresql_psycopg2",
-              "NAME": "searchengine",
-              "USER": "cook",
-              "PASSWORD": "chef",
-              "HOST": "localhost",
-              "PORT": "5432",
-          }
-      }
+        DEBUG = True
+        TEMPLATE_DEBUG = True
+        
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.postgresql_psycopg2",
+                "NAME": "searchengine",
+                "USER": "cook",
+                "PASSWORD": "chef",
+                "HOST": "localhost",
+                "PORT": "5432",
+            }
+        }
 
 Check that everything works by running:
 
