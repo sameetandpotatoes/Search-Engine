@@ -32,13 +32,45 @@ Now that you are inside the virtual environment, install all of your packages in
 - Then run `npm start`. Note that this is a perpetual task and if you cancel it, your JS changes will not show when you refresh the browser.
 - Now all JS changes will automatically (in a few seconds) get compiled down to `js` in `static/js`
 
-Now, in a separate window/tab in your Terminal, you can finally run:
+### Database Setup
 
-- `python manage.py runserver`
+- With postgres, run these commands
 
+    psql
+    CREATE DATABASE searchengine
+    Ctrl + D to exit
+    createuser -P -s -e cook
+    Enter `chef` as the password
+
+- In the searchengine folder, create a file called `local_settings.py`:
+
+    DEBUG = True
+    TEMPLATE_DEBUG = True
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "searchengine",
+            "USER": "cook",
+            "PASSWORD": "chef",
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    }
+
+Check that everything works by running:
+
+    python manage.py syncdb && python manage.py makemigrations && python manage.py migrate
+
+If it does, you're set and you can run the local server. If not, reach out to me and I'll see if I can help.
 
 ### Making Migrations
 
 - If you make a change in `engine/models.py`, you need to migrate those changes to the database schema. Do that with:
 
     python manage.py makemigrations engine
+
+
+Now, in a separate window/tab in your Terminal, you can finally run:
+
+- `python manage.py runserver`

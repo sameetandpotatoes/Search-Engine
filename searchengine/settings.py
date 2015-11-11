@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "bb*=mse*#jp+)v*$8^&zf%ex3d8-1u3r=7y-esu4fs-_w9%5p#"
 
 DEBUG = False
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -70,7 +70,6 @@ USE_TZ = True
 
 DATABASES = { 'default' : dj_database_url.config()}
 
-
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -80,6 +79,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+
+# Import local_settings to provide local database info
 
 try:
   from local_settings import *
