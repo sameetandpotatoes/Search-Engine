@@ -6,3 +6,4 @@ class Recipe(models.Model):
 
 class Ingredients(models.Model):
     title = models.CharField(max_length=30)
+    recipe = models.ForeignKey(Recipe)

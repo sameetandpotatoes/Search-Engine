@@ -35,3 +35,10 @@ Now that you are inside the virtual environment, install all of your packages in
 Now, in a separate window/tab in your Terminal, you can finally run:
 
 - `python manage.py runserver`
+
+
+### Making Migrations
+
+- If you make a change in `engine/models.py`, you need to migrate those changes to the database schema. Do that with:
+
+    python manage.py makemigrations engine

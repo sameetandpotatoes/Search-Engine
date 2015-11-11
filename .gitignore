@@ -3,3 +3,4 @@ venv
 staticfiles
 dev
 node_modules
+local_settings.py
