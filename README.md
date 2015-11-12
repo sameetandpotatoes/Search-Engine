@@ -11,6 +11,11 @@ We are using a `virtualenv` in Python to use self-contained, independent python 
 so that we don't have any version conflicts. This means that whenever you want to run,
 test, or do anything, you must be in the virtualenv.
 
+## Postgres Installation
+
+- http://postgresapp.com
+- Install, make sure it's running before you start the application (see the elephant in your menu bar at the top)
+
 ## `virtualenv` Installation
 
 - `virtualenv dev` (You don't have to call it dev, but I will for the remainder of this; it's just the name of your environment).
@@ -20,14 +25,7 @@ Now that you are inside the virtual environment, install all of your packages in
 
     pip install -r requirements.txt
 
-## Postgres Installation
-
-- [http://www.postgresql.org/download/](http://www.postgresql.org/download/)
-- Install, make sure it's running before you start the application (see the elephant in your menu bar at the top)
-
 ## Compiling JavaScript
-
-- Note you only need to do this if you make UI changes. If you're working purely in Django, then you can probably ignore the `npm start`.
 
 - Have [npm](https://nodejs.org/en/) installed.
 - Run `npm install` in the project root.
@@ -36,13 +34,17 @@ Now that you are inside the virtual environment, install all of your packages in
 
 ### Database Setup
 
-- With postgres, run these commands
+- Set up your PATH correctly:
 
-    > psql
-    > CREATE DATABASE searchengine
+- In `~/.bash_profile`, add:
 
-Ctrl + D to exit
+    export PATH="/Applications/Postgres.app/Contents/Version/9.4/bin:$PATH"
 
+- Then run `source ~/.bash_profile`
+
+- Run these commands in Terminal:
+
+    > createdb searchengine
     > createuser -P -s -e cook
 
 Enter `chef` as the password
