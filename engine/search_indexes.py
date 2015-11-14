@@ -1,6 +1,6 @@
 import datetime
 from haystack import indexes
-from models import Recipe, Ingredients
+from models import Recipe, Ingredient
 
 class RecipeIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -15,7 +15,7 @@ class IngredientIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     recipe = indexes.CharField(model_attr='recipe')
     def get_model(self):
-        return Ingredients
+        return Ingredient
 
     # def index_queryset(self, using=None):
     #     """Used when the entire index for model is updated."""
