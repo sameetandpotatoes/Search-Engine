@@ -79,7 +79,7 @@ Check that everything works by running:
 
 If it does, you're set and you can run the local server. If not, reach out to me and I'll see if I can help.
 
-### Making Migrations
+## Making Migrations
 
 - If you make a change in `engine/models.py`, you need to migrate those changes to the database schema. Do that with:
 
@@ -90,3 +90,10 @@ Now, in a separate window/tab in your Terminal, you can finally run:
 - `python manage.py runserver`
 
 Open up `http://localhost:8000`!
+
+
+## ElastiSearch index updating:
+
+Using the standard SearchIndex, your search index content is only updated whenever you run either `python manage.py update_index` or start afresh with `python manage.py rebuild_index`.
+
+*TODO*: Setup a cron job on `Heroku Scheduler` with `python manage.py update_index`
