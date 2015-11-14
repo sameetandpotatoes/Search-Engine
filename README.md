@@ -32,20 +32,28 @@ Now that you are inside the virtual environment, install all of your packages in
 - Then run `npm start`. Note that this is a perpetual task and if you cancel it, your JS changes will not show when you refresh the browser.
 - Now all JS changes will automatically (in a few seconds) get compiled down to `js` in `static/js`
 
-### Database Setup
+## Installing ElastiSearch
+
+After [downloading](https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.0.0/elasticsearch-2.0.0.zip) the latest release and extracting it, elasticsearch can be started using:
+
+    bin/elasticsearch
+
+Make sure that [http://localhost:9200](http://localhost:9200) opens up and shows you some json. That's how you know it's running!
+
+## Database Setup
 
 - Set up your PATH correctly:
 
 - In `~/.bash_profile`, add:
 
-    export PATH="/Applications/Postgres.app/Contents/Version/9.4/bin:$PATH"
+      export PATH="/Applications/Postgres.app/Contents/Version/9.4/bin:$PATH"
 
 - Then run `source ~/.bash_profile`
 
 - Run these commands in Terminal:
 
-    > createdb searchengine
-    > createuser -P -s -e cook
+      > createdb searchengine
+      > createuser -P -s -e cook
 
 Enter `chef` as the password
 
@@ -67,7 +75,7 @@ Enter `chef` as the password
 
 Check that everything works by running:
 
-    python manage.py syncdb
+    python manage.py syncdb && python manage.py makemigrations && python manage.py migrate
 
 If it does, you're set and you can run the local server. If not, reach out to me and I'll see if I can help.
 
