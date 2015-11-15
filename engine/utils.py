@@ -31,13 +31,21 @@ def filter_ingredients(parent_url, soup):
     Get the title of the recipe from a url
 """
 def get_title_from_page(parent_url, soup):
-    return soup(attrs={'class':rules.RULES[parent_url]['TITLE']})[0].getText().encode('ascii','ignore')
+    title = soup(attrs={'class':rules.RULES[parent_url]['TITLE']})
+    if title is None or len(title) == 0:
+        return None
+    else:
+        return title[0].getText().encode('ascii','ignore')
 
 """
     Get image of the recipe from a url
 """
 def get_image_from_page(parent_url, soup):
-    return soup(attrs=rules.RULES[parent_url]['IMAGE_URL'])[0]['src']
+    image_url = soup(attrs=rules.RULES[parent_url]['IMAGE_URL'])
+    if image_url is None or len(image_url) == 0:
+        return None
+    else:
+        return image_url[0]['src']
 
 """
     Recursive web crawler that gets the data from a base_url
@@ -56,32 +64,25 @@ def get_html(base, level):
         ingredients = filter_ingredients(parent_url, soup)
         title = get_title_from_page(parent_url, soup)
         image_url = get_image_from_page(parent_url, soup)
-        print "{}: {}".format(title, ingredients)
-        print "URL: {}\n".format(image_url)
-        recipe, created = Recipe.objects.get_or_create(
-            title=title,
-            image_url=image_url,
-            recipe_url=base
-        )
-        # If a new one had to be created, save it in the database
-        if created:
-            print "Adding recipe: {}".format(title)
-            recipe.save()
-        else:
-            print "Duplicate recipe: {}".format(title)
-
-        for i in ingredients:
-            ingredient, created = Ingredient.objects.get_or_create(
-                title=i,
-                recipe=recipe
+        if not(title is None or image_url is None):
+            recipe, created = Recipe.objects.get_or_create(
+                title=title,
+                image_url=image_url,
+                recipe_url=base
             )
+            # If a new one had to be created, save it in the database
             if created:
-                print "Adding ingredient: {}".format(i)
-                ingredient.save()
-            else:
-                print "Duplicate ingredient: {}".format(i)
+                print "Adding recipe: {}".format(title)
+                recipe.save()
 
-
+            for i in ingredients:
+                ingredient, created = Ingredient.objects.get_or_create(
+                    title=i,
+                    recipe=recipe
+                )
+                if created:
+                    print "Adding ingredient: {}".format(i)
+                    ingredient.save()
 
     # Now loop through all linked pages on the page and get their content too
     for link in soup.find_all('a'):
