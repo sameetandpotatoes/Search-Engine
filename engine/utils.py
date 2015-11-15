@@ -4,6 +4,7 @@ import IPython
 import validators
 import rules
 from urlparse import urljoin
+from models import Recipe, Ingredient
 
 """
     Helper function that returns the base website of a specific url if it is a
@@ -21,7 +22,7 @@ def url_in_rules(url):
 def filter_ingredients(parent_url, soup):
     good_ingredients = []
     for ing in soup(attrs={'class':rules.RULES[parent_url]['INGREDIENTS']}):
-        trimmed_ingredient = ing.getText()
+        trimmed_ingredient = ing.getText().encode('ascii','ignore')
         if not(any(i in trimmed_ingredient for i in rules.BAD_INGREDIENTS)) and trimmed_ingredient:
             good_ingredients.append(trimmed_ingredient)
     return good_ingredients
@@ -30,7 +31,7 @@ def filter_ingredients(parent_url, soup):
     Get the title of the recipe from a url
 """
 def get_title_from_page(parent_url, soup):
-    return soup(attrs={'class':rules.RULES[parent_url]['TITLE']})[0].getText()
+    return soup(attrs={'class':rules.RULES[parent_url]['TITLE']})[0].getText().encode('ascii','ignore')
 
 """
     Get image of the recipe from a url
@@ -57,15 +58,36 @@ def get_html(base, level):
         image_url = get_image_from_page(parent_url, soup)
         print "{}: {}".format(title, ingredients)
         print "URL: {}\n".format(image_url)
-        #TODO add to database
+        recipe, created = Recipe.objects.get_or_create(
+            title=title,
+            image_url=image_url,
+            recipe_url=base
+        )
+        # If a new one had to be created, save it in the database
+        if created:
+            print "Adding recipe: {}".format(title)
+            recipe.save()
+        else:
+            print "Duplicate recipe: {}".format(title)
+
+        for i in ingredients:
+            ingredient, created = Ingredient.objects.get_or_create(
+                title=i,
+                recipe=recipe
+            )
+            if created:
+                print "Adding ingredient: {}".format(i)
+                ingredient.save()
+            else:
+                print "Duplicate ingredient: {}".format(i)
+
+
 
     # Now loop through all linked pages on the page and get their content too
     for link in soup.find_all('a'):
         page_url = link.get('href')
-        if page_url is None or page_url is '' or page_url is '/' or page_url is base or validators.url(page_url):
+        if page_url is None or page_url == '' or page_url == '/' or page_url == base or validators.url(page_url):
             continue
         else:
             page_url = urljoin(base, page_url)
             get_html(page_url, level - 1)
-
-get_html('http://allrecipes.com', 2)
