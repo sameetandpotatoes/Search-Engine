@@ -4,6 +4,8 @@ from models import Recipe, Ingredient
 
 class RecipeIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
+    image_url = indexes.CharField(model_attr='image_url')
+    recipe_url = indexes.CharField(model_attr='recipe_url')
     def get_model(self):
         return Recipe
 
