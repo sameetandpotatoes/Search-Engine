@@ -3,4 +3,6 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
     (r'^$', 'portal.views.home'),
+    (r'^get/$', 'portal.views.get'),
+    (r'^recipes/$', 'portal.views.search')
 )
