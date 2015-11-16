@@ -5,7 +5,8 @@ var $ = require('jquery');
 var Index = React.createClass({
   getDefaultProps: function(){
     return {
-      'load': false
+      'load': false,
+      'base_url': ''
     };
   },
   getInitialState: function(){
@@ -13,14 +14,24 @@ var Index = React.createClass({
       'results': []
     };
   },
+  getMeta: function(param){
+    var meta_tags = document.getElementsByTagName('meta');
+    for (var i = 0; i < meta_tags.length; i++){
+      var meta = meta_tags[i];
+      if (meta['name'] == param){
+        return meta['content'];
+      }
+    }
+    return '';
+  },
   searchSubmitted: function(query){
-    console.log(query);
     this.props.load = true;
     this.props.afterSearch = true;
     this.forceUpdate();
-    console.log('http://localhost:8000/recipes?q='+query);
+
+    var url = this.props.base_url + '/recipes?q='+query;
     // Call search
-    $.get('http://localhost:8000/recipes?q='+query, function(recipes){
+    $.get(url, function(recipes){
       this.setState({
         results: recipes
       });
@@ -33,8 +44,10 @@ var Index = React.createClass({
       this.props.afterSearch = false;
     }
   },
+  componentDidMount: function(){
+    this.props.base_url = this.getMeta('base_url');
+  },
   render: function() {
-    console.log("Load is " + this.props.load);
     var search_title = "Food Me Food!";
     var placeholder = "Enter an ingredient or name of a recipe to see results!";
     if (this.props.load){
@@ -64,6 +77,7 @@ var Index = React.createClass({
     } else {
       return(
         <div className="row-fluid">
+          First time
           <Search onChange={this.searchSubmitted} search_title={search_title} placeholder={placeholder} disabled={false}/>
         </div>
       );
