@@ -2,6 +2,7 @@ var React = require('react');
 var Search = require('./components/search.react');
 var Loader = require('./components/loading.react');
 var $ = require('jquery');
+
 var Index = React.createClass({
   getDefaultProps: function(){
     return {
