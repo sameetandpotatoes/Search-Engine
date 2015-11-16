@@ -22,10 +22,7 @@ def search(request):
     ingredients = []
     recipes = []
     for result in indexed_results:
-        if result.content_type() == 'engine.ingredient':
-            recipe_model = Ingredient.objects.filter(id=result.pk)[0].recipe
-        else:
-            recipe_model = Recipe.objects.filter(id=result.pk)[0]
+        recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
         recipe = {}
         recipe['title'] = recipe_model.title
         recipe['image_url'] = recipe_model.image_url
