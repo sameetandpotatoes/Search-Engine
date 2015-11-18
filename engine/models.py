@@ -6,11 +6,11 @@ class Recipe(models.Model):
     recipe_url = models.TextField(max_length=2000, unique=True)
 
     def __str__(self):
-    	return self.title
+        return self.title
 
 class Ingredient(models.Model):
     title = models.CharField(max_length=255)
     recipe = models.ForeignKey(Recipe)
 
     def __str__(self):
-    	return self.title
+        return self.title

@@ -5,3 +5,4 @@ dev
 node_modules
 local_settings.py
 .idea/
+elasticsearch-2.0.0

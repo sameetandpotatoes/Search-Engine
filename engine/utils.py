@@ -72,7 +72,7 @@ def get_html(base, level):
             )
             # If a new one had to be created, save it in the database
             if created:
-                print "Adding recipe: {}".format(title)
+                print("Adding recipe: {}".format(title))
                 recipe.save()
 
             for i in ingredients:
@@ -81,7 +81,7 @@ def get_html(base, level):
                     recipe=recipe
                 )
                 if created:
-                    print "Adding ingredient: {}".format(i)
+                    print("Adding ingredient: {}".format(i))
                     ingredient.save()
 
     # Now loop through all linked pages on the page and get their content too
