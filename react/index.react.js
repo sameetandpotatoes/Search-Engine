@@ -1,13 +1,17 @@
 var React = require('react');
 var Search = require('./components/search.react');
 var Loader = require('./components/loading.react');
+var SearchResult = require('./components/search_result.react');
+var Header = require('./components/header.react');
 var $ = require('jquery');
 
 var Index = React.createClass({
   getDefaultProps: function(){
     return {
       'load': false,
-      'base_url': ''
+      'base_url': '',
+      'query': '',
+      'first': true
     };
   },
   getInitialState: function(){
@@ -26,17 +30,21 @@ var Index = React.createClass({
     return '';
   },
   searchSubmitted: function(query){
-    this.props.load = true;
-    this.props.afterSearch = true;
-    this.forceUpdate();
+    if (query != ""){
+      this.props.first = false;
+      this.props.query = query;
+      this.props.load = true;
+      this.props.afterSearch = true;
+      this.forceUpdate();
 
-    var url = this.props.base_url + '/recipes?q='+query;
-    // Call search
-    $.get(url, function(recipes){
-      this.setState({
-        results: recipes
-      });
-    }.bind(this));
+      var url = this.props.base_url + '/recipes?q='+query;
+      //Call search
+      $.get(url, function(recipes){
+        this.setState({
+          results: recipes
+        });
+      }.bind(this));
+    }
   },
   componentWillUpdate: function(nextProps, nextState){
     this.props.load = false;
@@ -49,40 +57,28 @@ var Index = React.createClass({
     this.props.base_url = this.getMeta('base_url');
   },
   render: function() {
-    var search_title = "Food Me Food!";
-    var placeholder = "Enter an ingredient or name of a recipe to see results!";
-    if (this.props.load){
-      return (
-        <div className="row-fluid">
-          Loading
-          <Search onChange={this.searchSubmitted} search_title={search_title} placeholder={placeholder} disabled={true}/>
-        </div>
-      );
-    } else if (this.state.results.recipes != null && this.state.results.recipes.length > 0){
-      return (
-        <div className="row-fluid">
-          Results
-          <Search onChange={this.searchSubmitted} search_title={search_title} placeholder={placeholder} disabled={false}/>
-          <ul>
-            {this.state.results.recipes.map(function(recipe){
-              return(
-                <li>
-                  <img src={recipe.image_url} width="25" height="25"></img>
-                  <p>{recipe.title}</p>
-                </li>
-              );
-            }, this)}
-          </ul>
-        </div>
-      );
-    } else {
-      return(
-        <div className="row-fluid">
-          First time
-          <Search onChange={this.searchSubmitted} search_title={search_title} placeholder={placeholder} disabled={false}/>
-        </div>
+    var header = <Header showHeader={this.props.first}/>;
+    var search = <Search onChange={this.searchSubmitted} value={this.props.query} disabled={this.props.load} showHeader={!this.props.first}/>;
+    var loader = this.props.load ? <Loader /> : null;
+    var results;
+
+    if (this.state.results.recipes != null && this.state.results.recipes.length > 0){
+      results=(
+        <ul>
+          {this.state.results.recipes.map(function(recipe){
+            return <SearchResult recipe={recipe} />;
+          }, this)}
+        </ul>
       );
     }
+    return(
+      <div className="row-fluid">
+        {header}
+        {loader}
+        {search}
+        {results}
+      </div>
+    );
   }
 });
 
