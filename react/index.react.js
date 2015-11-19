@@ -53,8 +53,8 @@ var Index = React.createClass({
     var placeholder = "Enter an ingredient or name of a recipe to see results!";
     if (this.props.load){
       return (
-        <div className="row-fluid">
-          Loading
+          <div className="row-fluid">
+            Loading
           <Search onChange={this.searchSubmitted} search_title={search_title} placeholder={placeholder} disabled={true}/>
         </div>
       );
@@ -71,6 +71,15 @@ var Index = React.createClass({
                   <p>{recipe.title}</p>
                 </li>
               );
+            }, this)}
+          </ul>
+          <ul>
+            {this.state.results.bob.map(function(ingredient) {
+                return(
+                    <li>
+                        <p><a href={ingredient.recipe.recipe_url}>{ingredient.title}</a></p>
+                    </li>
+                );
             }, this)}
           </ul>
         </div>

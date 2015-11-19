@@ -1,11 +1,9 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
+from django.http import HttpResponse
+from django.shortcuts import render_to_response
 from haystack.query import SearchQuerySet
 from engine import utils
 from engine.models import Recipe, Ingredient
 import json
-import IPython
 
 def home(request):
     base_url = request.build_absolute_uri('/')[:-1]
@@ -17,20 +15,26 @@ def get(request):
     utils.get_html("http://allrecipes.com", 2)
 
 def search(request):
-    # results = SearchQuerySet().filter(content=request.GET['q']).models(Recipe)
-    #     sqs = SearchQuerySet().auto_query('mor exmples')
-    # sqs.spelling_suggestion() # u'more examples'
     indexed_results = SearchQuerySet().filter(content=request.GET['q'])
     results = {}
     ingredients = []
     recipes = []
     for result in indexed_results:
-        recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
-        recipe = {}
-        recipe['title'] = recipe_model.title
-        recipe['image_url'] = recipe_model.image_url
-        recipe['url'] = recipe_model.recipe_url
-        recipe['ingredients'] = [t.title for t in Ingredient.objects.filter(recipe=recipe_model).all()]
-        recipes.append(recipe)
+        working = result.object
+        if isinstance(working, Recipe):
+            recipe = {
+                'title': working.title,
+                'image_url': working.image_url,
+                'url': working.recipe_url,
+                'ingredients': [t.title for t in Ingredient.objects.filter(recipe=working).all()]
+            }
+            recipes.append(recipe)
+        else:
+            ingredient = {
+                'title': working.title,
+                'recipe': working.recipe.title
+            }
+            ingredients.append(ingredient)
     results['recipes'] = recipes
+    results['bob'] = ingredients
     return HttpResponse(json.dumps(results), content_type='application/json')
