@@ -11,6 +11,7 @@ var Index = React.createClass({
       'load': false,
       'base_url': '',
       'query': '',
+      'page': 1,
       'first': true
     };
   },
@@ -30,21 +31,33 @@ var Index = React.createClass({
     return '';
   },
   searchSubmitted: function(query){
-    if (query != ""){
-      this.props.first = false;
-      this.props.query = query;
-      this.props.load = true;
-      this.props.afterSearch = true;
-      this.forceUpdate();
-
-      var url = this.props.base_url + '/recipes?q='+query;
-      //Call search
-      $.get(url, function(recipes){
-        this.setState({
-          results: recipes
-        });
-      }.bind(this));
+    //If new query, reset back to first page
+    if (query != this.props.query){
+      this.props.page = 1;
     }
+    if (query != ""){
+      this.props.query = query;
+      var url = this.props.base_url + '/recipes?q='+query+'&page='+this.props.page;
+      this.fetch(url);
+    }
+  },
+  fetch: function(url){
+    this.props.first = false;
+    this.props.load = true;
+    this.props.afterSearch = true;
+    this.forceUpdate();
+    //Call search
+    $.get(url, function(recipes){
+      this.setState({
+        results: recipes
+      });
+    }.bind(this));
+  },
+  getRecipes: function(e){
+    e.preventDefault();
+    var newURL = e.target.href;
+    this.props.page = parseInt(e.target.href.substring(e.target.href.length - 1));
+    this.fetch(newURL);
   },
   componentWillUpdate: function(nextProps, nextState){
     this.props.load = false;
@@ -60,9 +73,14 @@ var Index = React.createClass({
     var header = <Header showHeader={this.props.first}/>;
     var search = <Search onChange={this.searchSubmitted} value={this.props.query} disabled={this.props.load} showHeader={!this.props.first}/>;
     var loader = this.props.load ? <Loader /> : null;
-    var results;
-
+    var results, next, previous;
     if (this.state.results.recipes != null && this.state.results.recipes.length > 0){
+      if (this.state.results.next != null){
+        next = <a href={this.state.results.next} onClick={this.getRecipes}>Next Page</a>;
+      }
+      if (this.state.results.previous != null){
+        previous = <a href={this.state.results.previous} onClick={this.getRecipes}>Previous Page</a>;
+      }
       results=(
         <ul>
           {this.state.results.recipes.map(function(recipe){
@@ -77,6 +95,10 @@ var Index = React.createClass({
         {loader}
         {search}
         {results}
+        <div className="pagination">
+          {previous}
+          {next}
+        </div>
       </div>
     );
   }
