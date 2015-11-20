@@ -40,19 +40,28 @@ def search(request):
     begin = ((page - 1) * RESULTS_PER_PAGE)
     end = begin + RESULTS_PER_PAGE
 
-    results_on_page = indexed_results[begin:end]
-
     results = {}
     ingredients = []
     recipes = []
-    for result in results_on_page:
+    for i in xrange(begin, end):
+        result = indexed_results[i]
         recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
+        duplicate = False
+        for x in recipes:
+            if x['title'] == recipe_model.title:
+                # increase the end by 1
+                end += 1
+                duplicate = True
+                break
+        if duplicate: continue
+
         recipe = {}
         recipe['title'] = recipe_model.title
         recipe['image_url'] = recipe_model.image_url
         recipe['url'] = recipe_model.recipe_url
         recipe['ingredients'] = [t.title for t in Ingredient.objects.filter(recipe=recipe_model).all()]
         recipes.append(recipe)
+
     results['recipes'] = recipes
     if end < len(indexed_results):
         results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
