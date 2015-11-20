@@ -96,7 +96,7 @@ HAYSTACK_CONNECTIONS = {
 }
 if es.username:
     HAYSTACK_CONNECTIONS['default']['KWARGS'] = {"http_auth": es.username + ':' + es.password}
-
+HAYSTACK_CUSTOM_HIGHLIGHTER = 'engine.highlighter.MyHighlighter'
 # Import local_settings to provide local database info
 
 try:

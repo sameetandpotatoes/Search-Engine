@@ -6,19 +6,21 @@ class RecipeIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     image_url = indexes.CharField(model_attr='image_url')
     recipe_url = indexes.CharField(model_attr='recipe_url')
+
     def get_model(self):
         return Recipe
 
-    # def index_queryset(self, using=None):
-    #     """Used when the entire index for model is updated."""
-    #     return self.get_model().objects.filter(pub_date__lte=datetime.datetime.now())
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()
 
 class IngredientIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     recipe = indexes.CharField(model_attr='recipe')
+
     def get_model(self):
         return Ingredient
 
-    # def index_queryset(self, using=None):
-    #     """Used when the entire index for model is updated."""
-    #     return self.get_model().objects.filter(pub_date__lte=datetime.datetime.now())
+    def index_queryset(self, using=None):
+        """Used when the entire index for model is updated."""
+        return self.get_model().objects.all()

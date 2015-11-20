@@ -8,7 +8,7 @@ import json
 import IPython
 import utils
 
-RESULTS_PER_PAGE = 10
+RESULTS_PER_PAGE = 15
 
 def home(request):
     base_url = request.build_absolute_uri('/')[:-1]
@@ -29,9 +29,9 @@ def search(request):
 
     if len(exact_words) > 1:
         exact_match = exact_words[1]
-        indexed_results = SearchQuerySet().boost(exact_match, 3.0).filter(content=query)
+        indexed_results = SearchQuerySet().boost(exact_match, 3.0).filter(content=query).load_all()
     else:
-        indexed_results = SearchQuerySet().filter(content=query)
+        indexed_results = SearchQuerySet().filter(content=query).load_all()
 
     # Suggest something else if no results were found
     if not(indexed_results):
@@ -58,12 +58,10 @@ def search(request):
         if duplicate: continue
 
         recipe = {}
-        recipe['title'] = utils.highlight(query, recipe_model.title)
+        recipe['title'] = recipe_model.title
         recipe['image_url'] = recipe_model.image_url
         recipe['url'] = recipe_model.recipe_url
         recipe['ingredients'] = [utils.highlight(query, t.title) for t in Ingredient.objects.filter(recipe=recipe_model).all()]
-        # for t in Ingredient.objects.filter(recipe=recipe_model).all():
-        #     recipe['ingredients'].append(highlight.highlight(t.title))
         recipes.append(recipe)
 
     results['recipes'] = recipes
@@ -71,4 +69,5 @@ def search(request):
         results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
     if page != 1:
         results['previous'] = '/recipes?q={}&page={}'.format(query, page - 1)
+        
     return HttpResponse(json.dumps(results), content_type='application/json')
