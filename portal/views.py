@@ -44,8 +44,8 @@ def search(request):
     results = {}
     ingredients = []
     recipes = []
-    for i in xrange(begin, end):
-        result = indexed_results[i]
+    for result in indexed_results:
+        # result = indexed_results[i]
         recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
         recipe_model.title = utils.highlight(query, recipe_model.title)
         duplicate = False
@@ -64,10 +64,11 @@ def search(request):
         recipe['ingredients'] = [utils.highlight(query, t.title) for t in Ingredient.objects.filter(recipe=recipe_model).all()]
         recipes.append(recipe)
 
+    recipes = recipes[begin:end]
+
     results['recipes'] = recipes
     if end < len(indexed_results):
         results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
     if page != 1:
         results['previous'] = '/recipes?q={}&page={}'.format(query, page - 1)
-        
     return HttpResponse(json.dumps(results), content_type='application/json')
