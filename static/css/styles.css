@@ -72,6 +72,9 @@ a, a:hover, a:visited{
     -moz-animation: rotation 0.5s linear infinite;
     animation: rotation 0.5s linear infinite
 }
+.highlighted{
+  font-weight: 700;
+}
 @-webkit-keyframes rotation {
     from {
         -webkit-transform: rotate(0deg)

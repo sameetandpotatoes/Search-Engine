@@ -6,6 +6,7 @@ from engine import utils
 from engine.models import Recipe, Ingredient
 import json
 import IPython
+import utils
 
 RESULTS_PER_PAGE = 10
 
@@ -46,6 +47,7 @@ def search(request):
     for i in xrange(begin, end):
         result = indexed_results[i]
         recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
+        recipe_model.title = utils.highlight(query, recipe_model.title)
         duplicate = False
         for x in recipes:
             if x['title'] == recipe_model.title:
@@ -56,10 +58,12 @@ def search(request):
         if duplicate: continue
 
         recipe = {}
-        recipe['title'] = recipe_model.title
+        recipe['title'] = utils.highlight(query, recipe_model.title)
         recipe['image_url'] = recipe_model.image_url
         recipe['url'] = recipe_model.recipe_url
-        recipe['ingredients'] = [t.title for t in Ingredient.objects.filter(recipe=recipe_model).all()]
+        recipe['ingredients'] = [utils.highlight(query, t.title) for t in Ingredient.objects.filter(recipe=recipe_model).all()]
+        # for t in Ingredient.objects.filter(recipe=recipe_model).all():
+        #     recipe['ingredients'].append(highlight.highlight(t.title))
         recipes.append(recipe)
 
     results['recipes'] = recipes
