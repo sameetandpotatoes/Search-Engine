@@ -63,25 +63,22 @@ var Index = React.createClass({
         <div className="row-fluid">
           Results
           <Search onChange={this.searchSubmitted} search_title={search_title} placeholder={placeholder} disabled={false}/>
-          <ul>
+          <div class="items">
             {this.state.results.recipes.map(function(recipe){
               return(
-                <li>
-                  <img src={recipe.image_url} width="25" height="25"></img>
-                  <p>{recipe.title}</p>
-                </li>
+                <div class="recipe">
+                  <img src={recipe.image_url} width="25" height="25"> {recipe.title}</img>
+                </div>
               );
             }, this)}
-          </ul>
-          <ul>
             {this.state.results.bob.map(function(ingredient) {
                 return(
-                    <li>
+                    <div class="ingredient">
                         <p><a href={ingredient.recipe.recipe_url}>{ingredient.title}</a></p>
-                    </li>
+                    </div>
                 );
             }, this)}
-          </ul>
+          </div>
         </div>
       );
     } else {
