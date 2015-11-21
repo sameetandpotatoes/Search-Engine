@@ -7,6 +7,7 @@ from engine.models import Recipe, Ingredient
 import json
 import IPython
 import utils
+import timeit
 
 RESULTS_PER_PAGE = 15
 
@@ -25,18 +26,17 @@ def search(request):
     page = int(page)
     page = 1 if page <= 0 else page
 
-    exact_words = query.split('"')
+    start_time = timeit.default_timer()
 
-    if len(exact_words) > 1:
-        exact_match = exact_words[1]
-        indexed_results = SearchQuerySet().boost(exact_match, 3.0).filter(content=query).load_all()
-    else:
-        indexed_results = SearchQuerySet().filter(content=query).load_all()
+    indexed_results = SearchQuerySet().auto_query(query).load_all()
+
+    query = query.replace('"', '') # Remove quotes from the query, so highlighting works
 
     # Suggest something else if no results were found
     if not(indexed_results):
-        sqs = SearchQuerySet().auto_query(query)
-        return HttpResponse(json.dumps(sqs.spelling_suggestion(), content_type='application/json'))
+        sqs = SearchQuerySet().autocomplete(content_auto=query)
+        suggestions = [result.title for result in sqs]
+        return HttpResponse(json.dumps({"results": suggestions}), content_type='application/json')
 
     begin = ((page - 1) * RESULTS_PER_PAGE)
     end = begin + RESULTS_PER_PAGE
@@ -44,15 +44,13 @@ def search(request):
     results = {}
     ingredients = []
     recipes = []
+
     for result in indexed_results:
-        # result = indexed_results[i]
         recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
         recipe_model.title = utils.highlight(query, recipe_model.title)
         duplicate = False
         for x in recipes:
             if x['title'] == recipe_model.title:
-                # increase the end by 1
-                end += 1
                 duplicate = True
                 break
         if duplicate: continue
@@ -64,11 +62,16 @@ def search(request):
         recipe['ingredients'] = [utils.highlight(query, t.title) for t in Ingredient.objects.filter(recipe=recipe_model).all()]
         recipes.append(recipe)
 
-    recipes = recipes[begin:end]
+    elapsed = timeit.default_timer() - start_time
 
-    results['recipes'] = recipes
-    if end < len(indexed_results):
+    if end < len(recipes):
         results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
     if page != 1:
         results['previous'] = '/recipes?q={}&page={}'.format(query, page - 1)
+
+    results['total'] = len(recipes)
+    results['elapsed'] = round(elapsed, 4)
+    recipes = recipes[begin:end]
+    results['recipes'] = recipes
+    results['per_page'] = RESULTS_PER_PAGE
     return HttpResponse(json.dumps(results), content_type='application/json')

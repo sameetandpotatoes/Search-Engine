@@ -97,8 +97,9 @@ HAYSTACK_CONNECTIONS = {
 if es.username:
     HAYSTACK_CONNECTIONS['default']['KWARGS'] = {"http_auth": es.username + ':' + es.password}
 HAYSTACK_CUSTOM_HIGHLIGHTER = 'engine.highlighter.MyHighlighter'
-# Import local_settings to provide local database info
+HAYSTACK_DEFAULT_OPERATOR = 'OR'
 
+# Import local_settings to provide local database info
 try:
   from local_settings import *
 except Exception as e:
