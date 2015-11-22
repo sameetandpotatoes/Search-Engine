@@ -4,7 +4,7 @@
 """
 RULES = {
     'http://allrecipes.com': {
-        'RECIPE_URL': 'http://allrecipes.com/recipe/', #If a url doesn't match this, skip?
+        'RECIPE_URL': 'http://allrecipes.com/recipe/',
         'INGREDIENTS': ['recipe-ingred_txt'],
         'IMAGE_URL': {'itemprop': 'image'},
         'TITLE': ['recipe-summary__h1'],
@@ -15,6 +15,13 @@ RULES = {
         'INGREDIENTS': ['ingredients box-block'],
         'TITLE': ['tier-3 title'],
         'DIRECTIONS': ['directions']
+    },
+    'http://www.simplyrecipes.com': {
+        'RECIPE_URL': 'http://www.simplyrecipes.com/recipes/',
+        'INGREDIENTS': ['ingredient'],
+        'IMAGE_URL': ['photo'],
+        'TITLE': ['entry-title'],
+        'DIRECTIONS': ['instructions']
     }
 }
 

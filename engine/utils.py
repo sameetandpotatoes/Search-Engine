@@ -86,12 +86,14 @@ def get_html(base, level):
                     ingredient.save()
                     print "{} to {}".format(i, recipe.title)
                 except IntegrityError:
-                    pass
+                    continue
     # Now loop through all linked pages on the page and get their content too
     for link in soup.find_all('a'):
         page_url = link.get('href')
-        if page_url is None or page_url == '' or page_url == '/' or page_url == base or validators.url(page_url):
+        if page_url is None or page_url == '' or page_url == '/' or page_url == base or (validators.url(page_url) and url_in_rules(page_url) != base):
             continue
         else:
-            page_url = urljoin(base, page_url)
+            if url_in_rules(page_url) != base:
+                page_url = urljoin(base, page_url)
+            IPython.embed()
             get_html(page_url, level - 1)

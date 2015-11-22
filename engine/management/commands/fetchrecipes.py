@@ -9,5 +9,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         utils.get_html("http://allrecipes.com", 4)
-        self.stdout.write(self.style.SUCCESS('Successfully fetched all recipes'))
-        self.stdout.write(self.style.SUCCESS('Run python manage.py update_index to update elasticsearch'))
+        print "Successfully fetched all recipes"
+        print "Run python manage.py update_index to update elasticsearch"
