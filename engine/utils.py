@@ -95,5 +95,4 @@ def get_html(base, level):
         else:
             if url_in_rules(page_url) != base:
                 page_url = urljoin(base, page_url)
-            IPython.embed()
             get_html(page_url, level - 1)
