@@ -5,6 +5,7 @@ import validators
 import rules
 from urlparse import urljoin
 from models import Recipe, Ingredient
+from django.db import IntegrityError
 
 """
     Helper function that returns the base website of a specific url if it is a
@@ -48,6 +49,10 @@ def get_image_from_page(parent_url, soup):
         return image_url[0]['src']
 
 """
+    Returns true if Recipe already exists in the database
+"""
+
+"""
     Recursive web crawler that gets the data from a base_url
 """
 def get_html(base, level):
@@ -65,25 +70,23 @@ def get_html(base, level):
         title = get_title_from_page(parent_url, soup)
         image_url = get_image_from_page(parent_url, soup)
         if not(title is None or image_url is None):
-            recipe, created = Recipe.objects.get_or_create(
-                title=title,
-                image_url=image_url,
-                recipe_url=base
-            )
-            # If a new one had to be created, save it in the database
-            if created:
-                print "Adding recipe: {}".format(title)
+            """
+                Interesting thing I learned about get_or_create vs catching Exceptions:
+                "it's easier to ask for forgiveness than for permission".
+            """
+            try:
+                recipe = Recipe(title=title, image_url=image_url, recipe_url=base)
                 recipe.save()
-
+                print "Adding recipe: {}".format(title)
+            except IntegrityError:
+                recipe = Recipe.objects.filter(title=title).first()
             for i in ingredients:
-                ingredient, created = Ingredient.objects.get_or_create(
-                    title=i,
-                    recipe=recipe
-                )
-                if created:
-                    print "Adding ingredient: {}".format(i)
+                try:
+                    ingredient = Ingredient(title=i,recipe=recipe)
                     ingredient.save()
-
+                    print "{} to {}".format(i, recipe.title)
+                except IntegrityError:
+                    pass
     # Now loop through all linked pages on the page and get their content too
     for link in soup.find_all('a'):
         page_url = link.get('href')
