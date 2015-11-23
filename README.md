@@ -96,4 +96,9 @@ Open up `http://localhost:8000`!
 
 Using the standard SearchIndex, your search index content is only updated whenever you run either `python manage.py update_index` or start afresh with `python manage.py rebuild_index`.
 
-*TODO*: Setup a cron job on `Heroku Scheduler` with `python manage.py update_index`
+## Populate your database with over 3000 recipes and 10000 ingredients!
+
+    pg_restore --verbose --clean --no-acl --no-owner -h localhost -U cook -d searchengine latest.dump
+
+This assumes you have the Postgres database already set up with the same username `chef` and the same database name `searchengine`.
+Also, don't forget to update the index with `python manage.py update_index`. Postgres has all the data, but now we need to send the data to `Elasticsearch`
