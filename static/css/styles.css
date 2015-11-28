@@ -1,3 +1,18 @@
+body{
+  background-color: #F2F2F2;
+}
+
+.card{
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
+  background: #fff;
+  display: block;
+  margin: 1em auto;
+  width: 80%;
+  padding: 2em 0;
+}
+.recipe-image{
+  margin: 0 1.5em;
+}
 
 header{
   height: 85px;
@@ -41,16 +56,49 @@ a, a:hover, a:visited{
 }
 
 .search{
-  display: inline-block;
+  display: flex;
   width: 50%;
+  margin: 0 auto;
+}
+.search > input[type="text"]{
+  padding: 0.5em;
+  width: 350px;
+  border: solid 1px #E5E5E5;
+  outline: 0;
+  font: 1em 'Open Sans';
+  background: #FFFFFF;
+  border-color: #D3D3D3;
+  transition: 0.3s all ease-in-out;
+  -webkit-transition: 0.3s all ease-in-out;
+}
+.search > input[type="text"]:hover, input[type="text"]:focus{
+  border-color: #009688;
+}
+.search .btn-normal{
+  line-height: 25px;
+  vertical-align: bottom;
+}
+
+
+/* Removes annoying icon on input */
+.searchBox > input::-ms-clear {
+  display: none;
+}
+
+.search > input[type="text"], .search > .btn-normal{
+  display: inline-block;
 }
 
 .singleRecipe{
   list-style-type: none
 }
 .recipe-description, .recipe-image{
-  vertical-align: middle;
+  vertical-align: top;
   display: inline-block;
+}
+.recipe-description > h1{
+  padding-bottom: 1em;
+  font-size: 1.6em;
 }
 
 
@@ -62,19 +110,28 @@ a, a:hover, a:visited{
     z-index: 200
 }
 .load-container .load {
-    background-image: url("../images/loading.jpg");
+    background-image: url("../images/loading.png");
     background-repeat: no-repeat;
     background-size: 100%;
     height: 54px;
     width: 56px;
     margin: 0 auto;
-    -webkit-animation: rotation 0.5s linear infinite;
-    -moz-animation: rotation 0.5s linear infinite;
-    animation: rotation 0.5s linear infinite
+    -webkit-animation: rotation 1.0s linear infinite;
+    -moz-animation: rotation 1.0s linear infinite;
+    animation: rotation 1.0s linear infinite
 }
 .highlighted{
-  font-weight: 700;
+  font-weight: 400;
 }
+
+.next, .previous{
+  transition: 0.3s all ease-in-out;
+  -webkit-transition: 0.3s all ease-in-out;
+  position: relative;
+  left: 100px;
+  right: 100px;
+}
+
 @-webkit-keyframes rotation {
     from {
         -webkit-transform: rotate(0deg)
