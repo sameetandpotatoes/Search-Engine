@@ -6,7 +6,7 @@ module.exports = React.createClass({
       <li className="singleRecipe card">
         <img src={recipe.image_url} width="300" height="200" className="recipe-image"></img>
         <div className="recipe-description">
-          <h1><a target="_blank" href={recipe.url}><div dangerouslySetInnerHTML={{__html: recipe.title}} /></a></h1>
+          <h1><a target="_blank" href={recipe.url} className="recipe-link"><div dangerouslySetInnerHTML={{__html: recipe.title}} /></a></h1>
           <ul>
             {recipe.ingredients.map(function(ingredient){
               return <li><div dangerouslySetInnerHTML={{__html: ingredient}}/></li>;

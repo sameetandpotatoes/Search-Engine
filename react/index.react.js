@@ -51,6 +51,7 @@ var Index = React.createClass({
       this.setState({
         results: recipes
       });
+      window.scrollTo(0,0);
     }.bind(this));
   },
   getRecipes: function(e){
@@ -70,10 +71,8 @@ var Index = React.createClass({
     this.props.base_url = this.getMeta('base_url');
   },
   render: function() {
-    // var header = <Header showHeader={this.props.first}/>;
-    var header = <Header showHeader={true}/>;
-    // var search = <Search onChange={this.searchSubmitted} value={this.props.query} disabled={this.props.load} showHeader={!this.props.first}/>;
-    var search = <Search onChange={this.searchSubmitted} value={this.props.query} disabled={this.props.load} showHeader={false}/>;
+    var header = <Header showHeader={false}/>;
+    var search = <Search onChange={this.searchSubmitted} value={this.props.query} disabled={this.props.load} showHeader={true}/>;
     var loader = this.props.load ? <Loader /> : null;
     var results, next, previous;
     if (this.state.results.recipes != null && this.state.results.recipes.length > 0){
@@ -92,7 +91,7 @@ var Index = React.createClass({
       );
     }
     return(
-      <div className="row-fluid">
+      <div className="row-fluid" ref="parent">
         {header}
         {loader}
         {search}

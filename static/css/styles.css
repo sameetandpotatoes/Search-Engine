@@ -13,6 +13,9 @@ body{
 .recipe-image{
   margin: 0 1.5em;
 }
+.recipe-link{
+  text-decoration: underline;
+}
 
 header{
   height: 85px;
@@ -24,9 +27,10 @@ header > a{
   font-size: 1.6em;
   line-height: 85px;
   padding: 0 0.5em;
+  display: inline-block;
 }
 
-a, a:hover, a:visited{
+a, a:visited{
   text-decoration: none;
   color: inherit;
 }
@@ -55,15 +59,22 @@ a, a:hover, a:visited{
   background-color: #2196F3
 }
 
+.row-fluid{
+  position: relative;
+}
+
 .search{
-  display: flex;
-  width: 50%;
+  display: inline-block;
   margin: 0 auto;
+  position: relative;
+  left: 20%;
+  right: 20%;
 }
 .search > input[type="text"]{
-  padding: 0.5em;
+  padding: 5px 20px;
   width: 350px;
   border: solid 1px #E5E5E5;
+  height: 40px;
   outline: 0;
   font: 1em 'Open Sans';
   background: #FFFFFF;
@@ -75,14 +86,16 @@ a, a:hover, a:visited{
   border-color: #009688;
 }
 .search .btn-normal{
-  line-height: 25px;
+  height: 40px;
+  padding: 6px 0;
   vertical-align: bottom;
+  line-height: 40px;
 }
 
-
-/* Removes annoying icon on input */
-.searchBox > input::-ms-clear {
-  display: none;
+.pagination{
+  width: 100%;
+  text-align: center;
+  justify-content: center;
 }
 
 .search > input[type="text"], .search > .btn-normal{
@@ -96,18 +109,18 @@ a, a:hover, a:visited{
   vertical-align: top;
   display: inline-block;
 }
+
 .recipe-description > h1{
   padding-bottom: 1em;
   font-size: 1.6em;
 }
 
-
 .load-container {
-    position: fixed;
-    width: 100%;
-    top: 50%;
-    margin-top: -27px;
-    z-index: 200
+  position: fixed;
+  width: 100%;
+  top: 50%;
+  margin-top: -27px;
+  z-index: 200;
 }
 .load-container .load {
     background-image: url("../images/loading.png");
@@ -127,40 +140,29 @@ a, a:hover, a:visited{
 .next, .previous{
   transition: 0.3s all ease-in-out;
   -webkit-transition: 0.3s all ease-in-out;
-  position: relative;
-  left: 100px;
-  right: 100px;
 }
 
 @-webkit-keyframes rotation {
-    from {
-        -webkit-transform: rotate(0deg)
-    }
-    to {
-        -webkit-transform: rotate(360deg)
-    }
+  from { -webkit-transform: rotate(0deg)}
+  to { -webkit-transform: rotate(360deg)}
 }
 @-moz-keyframes rotation {
-    from {
-        -moz-transform: rotate(0deg)
-    }
-    to {
-        -moz-transform: rotate(360deg)
-    }
+  from { -moz-transform: rotate(0deg)}
+  to { -moz-transform: rotate(360deg)}
 }
 @keyframes rotation {
-    from {
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg)
-    }
-    to {
-        -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg)
-    }
+  from {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
