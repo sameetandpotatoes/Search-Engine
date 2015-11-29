@@ -83,11 +83,11 @@ If it does, you're set and you can run the local server. If not, reach out to me
 
 - If you make a change in `engine/models.py`, you need to migrate those changes to the database schema. Do that with:
 
-    python manage.py makemigrations && python manage.py migrate
+      python manage.py makemigrations && python manage.py migrate
 
 Now, in a separate window/tab in your Terminal, you can finally run:
 
-- `python manage.py runserver`
+      python manage.py runserver
 
 Open up `http://localhost:8000`!
 
