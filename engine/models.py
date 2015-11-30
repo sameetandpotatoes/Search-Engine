@@ -9,8 +9,11 @@ class Recipe(models.Model):
     	return self.title
 
 class Ingredient(models.Model):
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
     recipe = models.ForeignKey(Recipe)
+
+    class Meta:
+        unique_together = ('title', 'recipe',)
 
     def __str__(self):
     	return self.title
