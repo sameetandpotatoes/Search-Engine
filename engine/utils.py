@@ -62,7 +62,7 @@ def get_html(base, level):
 
     r = requests.get(base)
     soup = BeautifulSoup(r.text, 'html.parser')
-
+    print base
     # Do any parsing on current url
     parent_url = url_in_rules(base)
     if parent_url is not None:
