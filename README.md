@@ -46,14 +46,14 @@ Make sure that [http://localhost:9200](http://localhost:9200) opens up and shows
 
 - In `~/.bash_profile`, add:
 
-      export PATH="/Applications/Postgres.app/Contents/Version/9.4/bin:$PATH"
+        export PATH="/Applications/Postgres.app/Contents/Version/9.4/bin:$PATH"
 
 - Then run `source ~/.bash_profile`
 
 - Run these commands in Terminal:
 
-      > createdb searchengine
-      > createuser -P -s -e cook
+        createdb searchengine
+        createuser -P -s -e cook
 
 Enter `chef` as the password
 
@@ -83,7 +83,7 @@ If it does, you're set and you can run the local server. If not, reach out to me
 
 - If you make a change in `engine/models.py`, you need to migrate those changes to the database schema. Do that with:
 
-      python manage.py makemigrations && python manage.py migrate
+        python manage.py makemigrations && python manage.py migrate
 
 Now, in a separate window/tab in your Terminal, you can finally run:
 
@@ -95,10 +95,3 @@ Open up `http://localhost:8000`!
 ## ElastiSearch index updating:
 
 Using the standard SearchIndex, your search index content is only updated whenever you run either `python manage.py update_index` or start afresh with `python manage.py rebuild_index`.
-
-## Populate your database with over 3000 recipes and 10000 ingredients!
-
-    pg_restore --verbose --clean --no-acl --no-owner -h localhost -U cook -d searchengine latest.dump
-
-This assumes you have the Postgres database already set up with the same username `chef` and the same database name `searchengine`.
-Also, don't forget to update the index with `python manage.py update_index`. Postgres has all the data, but now we need to send the data to `Elasticsearch`
