@@ -9,7 +9,7 @@ import IPython
 import utils
 import timeit
 
-RESULTS_PER_PAGE = 15
+RESULTS_PER_PAGE = 10
 
 def home(request):
     base_url = request.build_absolute_uri('/')[:-1]
@@ -45,13 +45,25 @@ def search(request):
     ingredients = []
     recipes = []
 
-    for result in indexed_results:
+    if end < len(indexed_results):
+        results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
+    if page != 1:
+        results['previous'] = '/recipes?q={}&page={}'.format(query, page - 1)
+
+    list_of_recipe_indices = range(begin, end)
+
+    for recipe_num in list_of_recipe_indices:
+        if recipe_num >= len(indexed_results):
+            results.pop('next', None)
+            break
+        result = indexed_results[recipe_num]
         recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
         recipe_model.title = utils.highlight(query, recipe_model.title)
         duplicate = False
         for x in recipes:
             if x['title'] == recipe_model.title:
                 duplicate = True
+                list_of_recipe_indices.append(list_of_recipe_indices[-1] + 1)
                 break
         if duplicate: continue
 
@@ -64,14 +76,8 @@ def search(request):
 
     elapsed = timeit.default_timer() - start_time
 
-    if end < len(recipes):
-        results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
-    if page != 1:
-        results['previous'] = '/recipes?q={}&page={}'.format(query, page - 1)
-
     results['total'] = len(recipes)
     results['elapsed'] = round(elapsed, 4)
-    recipes = recipes[begin:end]
     results['recipes'] = recipes
     results['per_page'] = RESULTS_PER_PAGE
     return HttpResponse(json.dumps(results), content_type='application/json')

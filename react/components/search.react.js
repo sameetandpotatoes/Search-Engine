@@ -16,7 +16,7 @@ module.exports = React.createClass({
   getDefaultProps: function(){
     return{
       'typingTimer': null,
-      'delayInterval': 1000,
+      'delayInterval': 500,
       'search_query': ''
     };
   },

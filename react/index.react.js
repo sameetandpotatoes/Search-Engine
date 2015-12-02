@@ -51,12 +51,13 @@ var Index = React.createClass({
       this.setState({
         results: recipes
       });
+      window.scrollTo(0,0);
     }.bind(this));
   },
   getRecipes: function(e){
     e.preventDefault();
-    var newURL = e.target.href;
-    this.props.page = parseInt(e.target.href.substring(e.target.href.length - 1));
+    var newURL = e.currentTarget.href;
+    this.props.page = parseInt(newURL.substring(newURL.length - 1));
     this.fetch(newURL);
   },
   componentWillUpdate: function(nextProps, nextState){
@@ -70,16 +71,16 @@ var Index = React.createClass({
     this.props.base_url = this.getMeta('base_url');
   },
   render: function() {
-    var header = <Header showHeader={this.props.first}/>;
-    var search = <Search onChange={this.searchSubmitted} value={this.props.query} disabled={this.props.load} showHeader={!this.props.first}/>;
+    var header = <Header showHeader={false}/>;
+    var search = <Search onChange={this.searchSubmitted} value={this.props.query} disabled={this.props.load} showHeader={true}/>;
     var loader = this.props.load ? <Loader /> : null;
     var results, next, previous;
     if (this.state.results.recipes != null && this.state.results.recipes.length > 0){
       if (this.state.results.next != null){
-        next = <a href={this.state.results.next} onClick={this.getRecipes}>Next Page</a>;
+        next = <a href={this.state.results.next} onClick={this.getRecipes} className="next"><img src="../static/images/next.png" /></a>;
       }
       if (this.state.results.previous != null){
-        previous = <a href={this.state.results.previous} onClick={this.getRecipes}>Previous Page</a>;
+        previous = <a href={this.state.results.previous} onClick={this.getRecipes} className="previous"><img src="../static/images/previous.png"/></a>;
       }
       results=(
         <ul>
@@ -90,7 +91,7 @@ var Index = React.createClass({
       );
     }
     return(
-      <div className="row-fluid">
+      <div className="row-fluid" ref="parent">
         {header}
         {loader}
         {search}
