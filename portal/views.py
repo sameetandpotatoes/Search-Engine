@@ -76,8 +76,15 @@ def search(request):
 
     elapsed = timeit.default_timer() - start_time
 
-    results['total'] = len(recipes)
-    results['elapsed'] = round(elapsed, 4)
+    stats = {}
+
+    stats['total'] = len(indexed_results)
+    stats['elapsed'] = round(elapsed, 4)
+    stats['per_page'] = RESULTS_PER_PAGE
+    stats['num_pages'] = stats['total'] / stats['per_page']
+    stats['page'] = page
+
+    results['stats'] = stats
     results['recipes'] = recipes
-    results['per_page'] = RESULTS_PER_PAGE
+
     return HttpResponse(json.dumps(results), content_type='application/json')

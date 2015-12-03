@@ -3,6 +3,7 @@ var Search = require('./components/search.react');
 var Loader = require('./components/loading.react');
 var SearchResult = require('./components/search_result.react');
 var Header = require('./components/header.react');
+var StatsHeader = require('./components/stats.react');
 var $ = require('jquery');
 
 var Index = React.createClass({
@@ -83,11 +84,14 @@ var Index = React.createClass({
         previous = <a href={this.state.results.previous} onClick={this.getRecipes} className="previous"><img src="../static/images/previous.png"/></a>;
       }
       results=(
-        <ul>
-          {this.state.results.recipes.map(function(recipe){
-            return <SearchResult recipe={recipe} />;
-          }, this)}
-        </ul>
+        <div>
+          <StatsHeader stats={this.state.results.stats} />
+          <ul>
+            {this.state.results.recipes.map(function(recipe){
+              return <SearchResult recipe={recipe} />;
+            }, this)}
+          </ul>
+        </div>
       );
     }
     return(
