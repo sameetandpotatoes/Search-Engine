@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from haystack.query import SearchQuerySet
+from haystack.inputs import Raw
 from engine import utils
 from engine.models import Recipe, Ingredient
 import json
@@ -28,15 +29,14 @@ def search(request):
 
     start_time = timeit.default_timer()
 
+    # Exact match
     indexed_results = SearchQuerySet().auto_query(query).load_all()
 
     query = query.replace('"', '') # Remove quotes from the query, so highlighting works
 
-    # Suggest something else if no results were found
+    # Partial match
     if not(indexed_results):
-        sqs = SearchQuerySet().autocomplete(auto=query)
-        suggestions = [result.title for result in sqs]
-        return HttpResponse(json.dumps({"results": suggestions}), content_type='application/json')
+        indexed_results = SearchQuerySet().filter(text=Raw("*" +  query + "*"))
 
     begin = ((page - 1) * RESULTS_PER_PAGE)
     end = begin + RESULTS_PER_PAGE
