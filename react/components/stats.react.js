@@ -4,7 +4,7 @@ module.exports = React.createClass({
     return(
       <div className="card">
         <p className="stats-header">About {this.props.stats.total} results ({this.props.stats.elapsed} seconds)</p>
-        <p className="stats-header">Showing {this.props.stats.per_page} results on page {this.props.stats.page} of {this.props.stats.num_pages}</p>
+        <p className="stats-header">Page {this.props.stats.page}</p>
       </div>
     );
   }

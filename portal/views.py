@@ -1,8 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from haystack.query import SearchQuerySet
-from haystack.inputs import Raw
+from haystack.query import SearchQuerySet, SQ
+from haystack.inputs import Raw, AutoQuery
 from engine import utils
 from engine.models import Recipe, Ingredient
 import json
@@ -22,35 +22,44 @@ def get(request):
     utils.get_html("http://allrecipes.com", 2)
 
 def search(request):
-    query = request.GET['q']
+    query = request.GET['q'].strip()
     page = request.GET.get('page', 1)
     page = int(page)
     page = 1 if page <= 0 else page
 
     start_time = timeit.default_timer()
 
-    # Exact match
+    # TODO Exact match
     indexed_results = SearchQuerySet().auto_query(query).load_all()
 
-    query = query.replace('"', '') # Remove quotes from the query, so highlighting works
+    # normal match for multiple words
+    # sq = None
+    # for phrase in query.split():
+    #     if not sq:
+    #         sq = SQ(content=phrase)
+    #     else:
+    #         sq |= SQ(content=phrase)
+    # indexed_results = SearchQuerySet().filter(sq).load_all()
+
+    # Remove quotes from the query, so highlighting works
+    query = query.replace('"', '')
 
     # Partial match
     if not(indexed_results):
-        indexed_results = SearchQuerySet().filter(text=Raw("*" +  query + "*"))
+        indexed_results = SearchQuerySet().filter(text=Raw("*" +  query + "*")).load_all()
 
     begin = ((page - 1) * RESULTS_PER_PAGE)
     end = begin + RESULTS_PER_PAGE
-
     results = {}
     ingredients = []
     recipes = []
+
+    list_of_recipe_indices = range(begin, end)
 
     if end < len(indexed_results):
         results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
     if page != 1:
         results['previous'] = '/recipes?q={}&page={}'.format(query, page - 1)
-
-    list_of_recipe_indices = range(begin, end)
 
     for recipe_num in list_of_recipe_indices:
         if recipe_num >= len(indexed_results):
@@ -63,16 +72,17 @@ def search(request):
         for x in recipes:
             if x['title'] == recipe_model.title:
                 duplicate = True
+                # Add the following number to the end
                 list_of_recipe_indices.append(list_of_recipe_indices[-1] + 1)
                 break
-        if duplicate: continue
-
-        recipe = {}
-        recipe['title'] = recipe_model.title
-        recipe['image_url'] = recipe_model.image_url
-        recipe['url'] = recipe_model.recipe_url
-        recipe['ingredients'] = [utils.highlight(query, t.title) for t in Ingredient.objects.filter(recipe=recipe_model).all()]
-        recipes.append(recipe)
+        if not(duplicate):
+            recipe = {}
+            recipe['title'] = recipe_model.title
+            recipe['image_url'] = recipe_model.image_url
+            recipe['url'] = recipe_model.recipe_url
+            recipe['ingredients'] = [utils.highlight(query, t.title) for t in Ingredient.objects.filter(recipe=recipe_model).all()]
+            recipes.append(recipe)
+            print recipe_num
 
     elapsed = timeit.default_timer() - start_time
 
@@ -81,7 +91,6 @@ def search(request):
     stats['total'] = len(indexed_results)
     stats['elapsed'] = round(elapsed, 4)
     stats['per_page'] = RESULTS_PER_PAGE
-    stats['num_pages'] = stats['total'] / stats['per_page']
     stats['page'] = page
 
     results['stats'] = stats
