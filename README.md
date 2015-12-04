@@ -91,7 +91,6 @@ Now, in a separate window/tab in your Terminal, you can finally run:
 
 Open up `http://localhost:8000`!
 
-
 ## ElastiSearch index updating:
 
 Using the standard SearchIndex, your search index content is only updated whenever you run either `python manage.py update_index` or start afresh with `python manage.py rebuild_index`.
