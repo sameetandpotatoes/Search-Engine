@@ -6,6 +6,8 @@ class RecipeIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     image_url = indexes.CharField(model_attr='image_url')
     recipe_url = indexes.CharField(model_attr='recipe_url')
+    title = indexes.CharField(model_attr='title', null=True)
+    title_auto = indexes.NgramField(model_attr='title')
 
     def get_model(self):
         return Recipe
@@ -17,6 +19,8 @@ class RecipeIndex(indexes.SearchIndex, indexes.Indexable):
 class IngredientIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     recipe = indexes.CharField(model_attr='recipe')
+    title = indexes.CharField(model_attr='title', null=True)
+    title_auto = indexes.NgramField(model_attr='title')
 
     def get_model(self):
         return Ingredient
