@@ -34,7 +34,7 @@ def search(request):
 
     # Suggest something else if no results were found
     if not(indexed_results):
-        sqs = SearchQuerySet().autocomplete(content_auto=query)
+        sqs = SearchQuerySet().autocomplete(auto=query)
         suggestions = [result.title for result in sqs]
         return HttpResponse(json.dumps({"results": suggestions}), content_type='application/json')
 
