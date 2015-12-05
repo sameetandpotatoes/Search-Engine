@@ -30,7 +30,14 @@ def search(request):
     start_time = timeit.default_timer()
 
     # TODO Exact match
-    indexed_results = SearchQuerySet().auto_query(query).load_all()
+
+    if query == query.replace('"', ''): # no quotes
+        indexed_results = SearchQuerySet().filter(text=Raw("*" +  query + "*")).load_all()
+    else: #do partial match
+        print "quote stuff"
+        indexed_results = SearchQuerySet().auto_query(query).load_all()
+
+    query = query.replace('"', '')
 
     # normal match for multiple words
     # sq = None
@@ -42,11 +49,6 @@ def search(request):
     # indexed_results = SearchQuerySet().filter(sq).load_all()
 
     # Remove quotes from the query, so highlighting works
-    query = query.replace('"', '')
-
-    # Partial match
-    if not(indexed_results):
-        indexed_results = SearchQuerySet().filter(text=Raw("*" +  query + "*")).load_all()
 
     begin = ((page - 1) * RESULTS_PER_PAGE)
     end = begin + RESULTS_PER_PAGE
@@ -55,6 +57,10 @@ def search(request):
     recipes = []
 
     list_of_recipe_indices = range(begin, end)
+    stats = {}
+    stats['total'] = len(indexed_results)
+    stats['per_page'] = RESULTS_PER_PAGE
+    stats['page'] = page
 
     if end < len(indexed_results):
         results['next'] = '/recipes?q={}&page={}'.format(query, page + 1)
@@ -64,6 +70,7 @@ def search(request):
     for recipe_num in list_of_recipe_indices:
         if recipe_num >= len(indexed_results):
             results.pop('next', None)
+            stats['total'] = len(recipes)
             break
         result = indexed_results[recipe_num]
         recipe_model = result.object if isinstance(result.object, Recipe) else result.object.recipe
@@ -86,12 +93,8 @@ def search(request):
 
     elapsed = timeit.default_timer() - start_time
 
-    stats = {}
 
-    stats['total'] = len(indexed_results)
     stats['elapsed'] = round(elapsed, 4)
-    stats['per_page'] = RESULTS_PER_PAGE
-    stats['page'] = page
 
     results['stats'] = stats
     results['recipes'] = recipes
