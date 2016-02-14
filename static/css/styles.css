@@ -14,6 +14,10 @@ body{
   padding: 0.20em 0.5em;
   font-size: 1.0em;
 }
+.card > span{
+  padding: 0.5em 1em;
+  display: block;
+}
 
 .recipe-image{
   margin: 0 1.5em;
@@ -29,7 +33,7 @@ header{
 }
 header > a{
   vertical-align: middle;
-  font-size: 1.6em;
+  font-size: 2.2em;
   line-height: 85px;
   padding: 0 0.5em;
   display: inline-block;
@@ -69,15 +73,19 @@ a, a:visited{
 }
 
 .search{
-  display: inline-block;
+  display: block;
   margin: 0 auto;
-  position: relative;
-  left: 20%;
-  right: 20%;
+  position: absolute;
+  text-align: center;
+  top: 17px;
+  left: 0;
+  right: 0;
+  height: 50px;
 }
+
 .search > input[type="text"]{
   padding: 5px 20px;
-  width: 350px;
+  width: 500px;
   border: solid 1px #E5E5E5;
   height: 40px;
   outline: 0;

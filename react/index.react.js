@@ -93,6 +93,27 @@ var Index = React.createClass({
           </ul>
         </div>
       );
+    } else {
+      results = (
+        <div className="row-fluid">
+          <li className="singleRecipe card">
+            <span>Welcome to the search engine for recipes!</span>
+            <span>
+              With ElasticSearch and a 10,000 row limit on Heroku, Food Me
+              Food is able to host almost 10,000 recipes and ingredients
+              for your eyes to feast on.
+            </span>
+            <span>
+              Search by ingredients or recipe names, and you will see hundreds of
+              results, with images and ingredients.
+              Click on the recipe names to see the source website for the recipe.
+            </span>
+            <span>
+              ~ Built by <a href="http://sameetsapra.com" className="recipe-link">Sameet Sapra</a> for SIG-IR
+            </span>
+          </li>
+        </div>
+      );
     }
     return(
       <div className="row-fluid" ref="parent">
