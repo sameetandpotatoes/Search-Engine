@@ -2,7 +2,7 @@ appnope==0.1.0
 beautifulsoup4==4.4.1
 decorator==4.0.4
 dj-database-url==0.3.0
-Django==1.8.1
+Django==1.11.29
 django-haystack==2.4.1
 django-postgrespool==0.3.0
 elasticsearch==2.1.0
