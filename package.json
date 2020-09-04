@@ -10,7 +10,7 @@
     "keymirror": "~0.1.0",
     "lodash": "^3.10.0",
     "object-assign": "^1.0.0",
-    "react": "^0.13.3",
+    "react": "^16.13.1",
     "requirejs": "2.1.18",
     "tether": "1.0.3",
     "underscore": "^1.8.3",
