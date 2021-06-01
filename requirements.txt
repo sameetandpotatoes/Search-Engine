@@ -22,6 +22,6 @@ simplegeneric==0.8.1
 six==1.10.0
 SQLAlchemy==1.0.4
 traitlets==4.0.0
-urllib3==1.12
+urllib3==1.26.5
 validators==0.9
 whitenoise==2.0.2
